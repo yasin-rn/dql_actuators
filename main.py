@@ -8,7 +8,7 @@ network = NeuralNetwork(0.001)
 
 input_headers = ["ActuatorPositions", "ActuatorDeviations"]
 output_headers = ["ActuatorActions"]
-input_data, output_data = loader.get_nn_data(input_headers, output_headers)
+input_data, output_data = loader.get_nn_data(1, input_headers, output_headers)
 
 input_tensors = torch.from_numpy(input_data)
 output_tensors = torch.from_numpy(output_data)

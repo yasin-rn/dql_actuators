@@ -4,9 +4,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 
-class Agent_Intelligence(nn.Module):
+class NeuralNetwork(nn.Module):
     def __init__(self, learning_rate):
-        super(Agent_Intelligence, self).__init__()
+        super(NeuralNetwork, self).__init__()
         self.fc1 = nn.Linear(96, 256)
         self.fc2 = nn.Linear(256, 256)
         self.fc3 = nn.Linear(256, 144)

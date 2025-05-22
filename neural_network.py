@@ -31,11 +31,8 @@ class TransformerEncoderNetwork(nn.Module):
         return predicted_classes
 
     def forward(self, x):
-
         x = self.embedding(x)
-        x = x.unsqueeze(1)
         x = self.transformer_encoder(x)
-        x = x.squeeze(1)
         output = self.output_layer(x)
         return output
 

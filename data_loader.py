@@ -1,4 +1,3 @@
-import torch
 import pandas as pd
 import json
 import numpy as np
@@ -28,24 +27,30 @@ class DatasetLoader:
         for row in range(self.data_length-seq_len):
 
             input_seq_data = []
-            output_row = []
+            output_seq_data = []
 
             for seq in range(seq_len):
 
                 input_row = []
+                output_row = []
 
                 for input_header in input_headers:
                     input_row = np.concatenate(
                         [input_row, self.data_frame.loc[row+index-seq, input_header]])
 
+                for outout_header in output_headers:
+                    output_row = np.concatenate(
+                        [output_row, self.data_frame.loc[row+index-seq, outout_header]])
+                    output_row = self.one_hot_encode(output_row, 3)
                 input_seq_data.append(input_row)
+                output_seq_data.append(output_row)
 
-            for outout_header in output_headers:
-                output_row = np.concatenate(
-                    [output_row, self.data_frame.loc[row+index-seq, outout_header]])
             input_datas.append(input_seq_data)
-            output_datas.append(output_row)
+            output_datas.append(output_seq_data)
 
         return input_datas, output_datas
 
-
+    def one_hot_encode(self, actions: np.ndarray, num_classes: int = 3) -> np.ndarray:
+        actions = actions.astype(int)
+        one_hot = np.eye(num_classes)[actions]
+        return one_hot.reshape([len(actions)*num_classes, 1])

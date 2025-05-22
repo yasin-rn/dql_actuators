@@ -25,6 +25,12 @@ class SimulationConnection:
         response.raise_for_status()
         result = np.array(response.json(), dtype=np.float32)
         return result
+    
+    def get_actuator_deviation_ts(self):
+        response = self.session.get(f"{self.base_url}/GetActuatorDeviationTS")
+        response.raise_for_status()
+        result = np.array(response.json(), dtype=np.float32)
+        return result
 
     def get_sigma_2(self):
         response = self.session.get(f"{self.base_url}/GetSigma2")

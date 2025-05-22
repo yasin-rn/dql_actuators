@@ -24,6 +24,8 @@ class TransformerEncoderNetwork(nn.Module):
         self.optimizer = optim.Adam(self.parameters(), lr=learning_rate)
         self.loss_fn = nn.MSELoss()
         self.loss_list = []
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.to(device)
 
     def decode_output(self, output_tensor):
         reshaped = output_tensor.view(-1, 3)
@@ -37,7 +39,7 @@ class TransformerEncoderNetwork(nn.Module):
         return output
 
     def predict(self, x):
-        output = self.forward(x)
+        output = self.forward(x)[2]
         decoded = self.decode_output(output)
         return decoded
 
@@ -46,9 +48,10 @@ class TransformerEncoderNetwork(nn.Module):
         loss.backward()
         self.loss_list.append(loss.item())
 
-    def update(self):
+    def update(self,print_loss):
         avg_loss = sum(self.loss_list)/len(self.loss_list)
-        print("Loss: ", avg_loss)
+        if print_loss:
+            print("Loss: ", avg_loss)
         self.optimizer.step()
         self.optimizer.zero_grad()
         self.loss_list.clear()

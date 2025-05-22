@@ -1,17 +1,37 @@
 import torch
 from data_loader import DatasetLoader
-from neural_network import NeuralNetwork
+from neural_network import TransformerEncoderNetwork
+
+input_headers = [
+    "ActuatorPositions"]
+output_headers = ["ActuatorActions"]
 
 
 loader = DatasetLoader("Dataset_70_200520251831.json")
-network = NeuralNetwork(0.001)
 
-input_headers = ["ActuatorPositions", "ActuatorDeviations"]
-output_headers = ["ActuatorActions"]
-input_data, output_data = loader.get_nn_data(1, input_headers, output_headers)
+input_datas, output_datas = loader.get_seq_data(
+    3, input_headers, output_headers)
 
-input_tensors = torch.from_numpy(input_data)
-output_tensors = torch.from_numpy(output_data)
-nn_out = network.forward(input_tensors)
+input_tensor = torch.tensor(input_datas, dtype=torch.float32)
+output_tensor = torch.tensor(output_datas)
 
-network.backward(nn_out, output_tensors)
+# Model parametreleri
+input_dim = 48
+model_dim = 64
+num_heads = 8
+num_layers = 2
+output_dim = 48
+learning_rate = 1e-4
+sequence_length = 3
+batch_size = 17
+
+# Transformer modeli oluştur
+model = TransformerEncoderNetwork(
+    input_dim=input_dim,
+    model_dim=model_dim,
+    num_heads=num_heads,
+    num_layers=num_layers,
+    output_dim=output_dim,
+    learning_rate=learning_rate
+)
+model.forward(input_tensor)
